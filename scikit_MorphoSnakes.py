@@ -1,6 +1,4 @@
 from ikomia import dataprocess
-import scikit_MorphoSnakes_process as processMod
-import scikit_MorphoSnakes_widget as widgetMod
 
 
 # --------------------
@@ -13,9 +11,11 @@ class scikit_MorphoSnakes(dataprocess.CPluginProcessInterface):
         dataprocess.CPluginProcessInterface.__init__(self)
 
     def getProcessFactory(self):
+        from scikit_MorphoSnakes.scikit_MorphoSnakes_process import scikit_MorphoSnakesProcessFactory
         # Instantiate process object
-        return processMod.scikit_MorphoSnakesProcessFactory()
+        return scikit_MorphoSnakesProcessFactory()
 
     def getWidgetFactory(self):
+        from scikit_MorphoSnakes.scikit_MorphoSnakes_widget import scikit_MorphoSnakesWidgetFactory
         # Instantiate associated widget object
-        return widgetMod.scikit_MorphoSnakesWidgetFactory()
+        return scikit_MorphoSnakesWidgetFactory()

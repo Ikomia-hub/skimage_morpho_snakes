@@ -1,6 +1,5 @@
 from ikomia import core, dataprocess
 import copy
-# your imports below
 from skimage.segmentation import (morphological_geodesic_active_contour, inverse_gaussian_gradient, morphological_chan_vese)
 from skimage import img_as_float
 import numpy as np
@@ -11,10 +10,10 @@ import cv2
 # - Class to handle the process parameters
 # - Inherits core.CProtocolTaskParam from Ikomia API
 # --------------------
-class scikit_MorphoSnakesParam(core.CProtocolTaskParam):
+class scikit_MorphoSnakesParam(core.CWorkflowTaskParam):
 
     def __init__(self):
-        core.CProtocolTaskParam.__init__(self)
+        core.CWorkflowTaskParam.__init__(self)
         
         # parameters
         self.method = "mgac"
@@ -28,59 +27,59 @@ class scikit_MorphoSnakesParam(core.CProtocolTaskParam):
         self.mcv_lambda1 = 1
         self.mcv_lambda2 = 1
 
-    def setParamMap(self, paramMap):
+    def setParamMap(self, param_map):
         # Set parameters values from Ikomia application
-        self.method = int(paramMap["method"])
-        self.mgac_amplification_contour = int(paramMap["mgac_amplification_contour"])
-        self.mgac_iterations = int(paramMap["mgac_iterations"])
-        self.mgac_smoothing = int(paramMap["mgac_smoothing"])
-        self.mgac_threshold = int(paramMap["mgac_threshold"])
-        self.mgac_balloon = int(paramMap["mgac_balloon"])
-        self.mcv_iterations = int(paramMap["mcv_iterations"])
-        self.mcv_smoothing = int(paramMap["mcv_smoothing"])
-        self.mcv_lambda1 = int(paramMap["mcv_lambda1"])
-        self.mcv_lambda2 = int(paramMap["mcv_lambda2"])
+        self.method = int(param_map["method"])
+        self.mgac_amplification_contour = int(param_map["mgac_amplification_contour"])
+        self.mgac_iterations = int(param_map["mgac_iterations"])
+        self.mgac_smoothing = int(param_map["mgac_smoothing"])
+        self.mgac_threshold = int(param_map["mgac_threshold"])
+        self.mgac_balloon = int(param_map["mgac_balloon"])
+        self.mcv_iterations = int(param_map["mcv_iterations"])
+        self.mcv_smoothing = int(param_map["mcv_smoothing"])
+        self.mcv_lambda1 = int(param_map["mcv_lambda1"])
+        self.mcv_lambda2 = int(param_map["mcv_lambda2"])
 
     def getParamMap(self):
         # Send parameters values to Ikomia application
         # Create the specific dict structure (string container)
-        paramMap = core.ParamMap()
-        paramMap["method"] = str(self.method)
-        paramMap["mgac_amplification_contour"] = str(self.mgac_amplification_contour)
-        paramMap["mgac_iterations"] = str(self.mgac_iterations)
-        paramMap["mgac_smoothing"] = str(self.mgac_smoothing)
-        paramMap["mgac_threshold"] = str(self.mgac_threshold)
-        paramMap["mgac_balloon"] = str(self.mgac_balloon)
-        paramMap["mcv_iterations"] = str(self.mcv_iterations)
-        paramMap["mcv_smoothing"] = str(self.mcv_smoothing)
-        paramMap["mcv_lambda1"] = str(self.mcv_lambda1)
-        paramMap["mcv_lambda2"] = str(self.mcv_lambda2)
-        return paramMap
+        param_map = core.ParamMap()
+        param_map["method"] = str(self.method)
+        param_map["mgac_amplification_contour"] = str(self.mgac_amplification_contour)
+        param_map["mgac_iterations"] = str(self.mgac_iterations)
+        param_map["mgac_smoothing"] = str(self.mgac_smoothing)
+        param_map["mgac_threshold"] = str(self.mgac_threshold)
+        param_map["mgac_balloon"] = str(self.mgac_balloon)
+        param_map["mcv_iterations"] = str(self.mcv_iterations)
+        param_map["mcv_smoothing"] = str(self.mcv_smoothing)
+        param_map["mcv_lambda1"] = str(self.mcv_lambda1)
+        param_map["mcv_lambda2"] = str(self.mcv_lambda2)
+        return param_map
 
 
 # --------------------
 # - Class which implements the process
 # - Inherits core.CProtocolTask or derived from Ikomia API
 # --------------------
-class scikit_MorphoSnakesProcess(dataprocess.CImageProcess2d):
+class scikit_MorphoSnakesProcess(dataprocess.C2dImageTask):
 
     def __init__(self, name, param):
-        dataprocess.CImageProcess2d.__init__(self, name)
+        dataprocess.C2dImageTask.__init__(self, name)
 
-        #Create parameters class
+        # Create parameters class
         if param is None:
             self.setParam(scikit_MorphoSnakesParam())
         else:
             self.setParam(copy.deepcopy(param))
         
         # add input -> initial level set
-        self.addInput(dataprocess.CImageProcessIO())
+        self.addInput(dataprocess.CImageIO())
 
         # add output -> results image
-        self.addOutput(dataprocess.CImageProcessIO())
+        self.addOutput(dataprocess.CImageIO())
 
         # set color mask
-        self.setOutputColorMap(1,0,[[255,0,0]])
+        self.setOutputColorMap(1, 0, [[255, 0, 0]])
 
     def getProgressSteps(self, eltCount=1):
         # Function returning the number of progress steps for this process
@@ -158,10 +157,10 @@ class scikit_MorphoSnakesProcess(dataprocess.CImageProcess2d):
 # - Factory class to build process object
 # - Inherits dataprocess.CProcessFactory from Ikomia API
 # --------------------
-class scikit_MorphoSnakesProcessFactory(dataprocess.CProcessFactory):
+class scikit_MorphoSnakesProcessFactory(dataprocess.CTaskFactory):
 
     def __init__(self):
-        dataprocess.CProcessFactory.__init__(self)
+        dataprocess.CTaskFactory.__init__(self)
         # Set process information as string here
         self.info.name = "scikit_MorphoSnakes"
         self.info.shortDescription = "Morphological active contour segmentation from scikit-image library."

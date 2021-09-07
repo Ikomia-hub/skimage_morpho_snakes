@@ -1,7 +1,7 @@
 from ikomia import utils, core, dataprocess
-import scikit_MorphoSnakes_process as processMod
-
-#PyQt GUI framework
+from ikomia.utils import qtconversion
+from scikit_MorphoSnakes.scikit_MorphoSnakes_process import scikit_MorphoSnakesParam
+# PyQt GUI framework
 from PyQt5.QtWidgets import *
 
 
@@ -9,13 +9,13 @@ from PyQt5.QtWidgets import *
 # - Class which implements widget associated with the process
 # - Inherits core.CProtocolTaskWidget from Ikomia API
 # --------------------
-class scikit_MorphoSnakesWidget(core.CProtocolTaskWidget):
+class scikit_MorphoSnakesWidget(core.CWorkflowTaskWidget):
 
     def __init__(self, param, parent):
-        core.CProtocolTaskWidget.__init__(self, parent)
+        core.CWorkflowTaskWidget.__init__(self, parent)
 
         if param is None:
-            self.parameters = processMod.scikit_MorphoSnakesParam()
+            self.parameters = scikit_MorphoSnakesParam()
         else:
             self.parameters = param
 
@@ -40,10 +40,10 @@ class scikit_MorphoSnakesWidget(core.CProtocolTaskWidget):
         self.stack.addWidget(self.mgac)
         self.stack.addWidget(self.chanVese)
         self.gridLayout.addWidget(self.stack, 2, 0)
-        self.gridLayout.setRowStretch(3,3)
+        self.gridLayout.setRowStretch(3, 3)
 
         # PyQt -> Qt wrapping
-        layout_ptr = utils.PyQtToQt(self.gridLayout)
+        layout_ptr = qtconversion.PyQtToQt(self.gridLayout)
 
         # Set widget layout
         self.setLayout(layout_ptr)
@@ -189,21 +189,21 @@ class scikit_MorphoSnakesWidget(core.CProtocolTaskWidget):
 
         self.chanVese.setLayout(self.gridLayoutMcv)
 
-    #pySlot
+    # pySlot
     def OnContourDefaultChange(self):
         if not self.mgac_coutour_check.isChecked():
             self.mgac_stack_comboContour.hide()
         else :
             self.mgac_stack_comboContour.show()
 
-    #pySlot
+    # pySlot
     def OnThresholdDefaultChange(self):
         if self.mgac_threshold_check.isChecked():
             self.mgac_spin_threshold.hide()
         else :
             self.mgac_spin_threshold.show()
 
-    #pySlot
+    # pySlot
     def OnMethodChange(self):
         if self.comboMethod.currentText() == "Morphological Geodesic Active Contour":
             self.stack.setCurrentIndex(0)
@@ -240,10 +240,10 @@ class scikit_MorphoSnakesWidget(core.CProtocolTaskWidget):
         self.emitApply(self.parameters)
 
 
-#--------------------
-#- Factory class to build process widget object
-#- Inherits dataprocess.CWidgetFactory from Ikomia API
-#--------------------
+# --------------------
+# - Factory class to build process widget object
+# - Inherits dataprocess.CWidgetFactory from Ikomia API
+# --------------------
 class scikit_MorphoSnakesWidgetFactory(dataprocess.CWidgetFactory):
 
     def __init__(self):
