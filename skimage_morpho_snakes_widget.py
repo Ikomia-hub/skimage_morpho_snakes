@@ -1,6 +1,6 @@
 from ikomia import utils, core, dataprocess
 from ikomia.utils import qtconversion
-from scikit_MorphoSnakes.scikit_MorphoSnakes_process import scikit_MorphoSnakesParam
+from skimage_morpho_snakes.skimage_morpho_snakes_process import MorphoSnakesParam
 # PyQt GUI framework
 from PyQt5.QtWidgets import *
 
@@ -9,13 +9,13 @@ from PyQt5.QtWidgets import *
 # - Class which implements widget associated with the process
 # - Inherits core.CProtocolTaskWidget from Ikomia API
 # --------------------
-class scikit_MorphoSnakesWidget(core.CWorkflowTaskWidget):
+class MorphoSnakesWidget(core.CWorkflowTaskWidget):
 
     def __init__(self, param, parent):
         core.CWorkflowTaskWidget.__init__(self, parent)
 
         if param is None:
-            self.parameters = scikit_MorphoSnakesParam()
+            self.parameters = MorphoSnakesParam()
         else:
             self.parameters = param
 
@@ -244,13 +244,13 @@ class scikit_MorphoSnakesWidget(core.CWorkflowTaskWidget):
 # - Factory class to build process widget object
 # - Inherits dataprocess.CWidgetFactory from Ikomia API
 # --------------------
-class scikit_MorphoSnakesWidgetFactory(dataprocess.CWidgetFactory):
+class MorphoSnakesWidgetFactory(dataprocess.CWidgetFactory):
 
     def __init__(self):
         dataprocess.CWidgetFactory.__init__(self)
         # Set the name of the process -> it must be the same as the one declared in the process factory class
-        self.name = "scikit_MorphoSnakes"
+        self.name = "skimage_morpho_snakes"
 
     def create(self, param):
         # Create widget object
-        return scikit_MorphoSnakesWidget(param, None)
+        return MorphoSnakesWidget(param, None)

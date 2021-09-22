@@ -10,7 +10,7 @@ import cv2
 # - Class to handle the process parameters
 # - Inherits core.CProtocolTaskParam from Ikomia API
 # --------------------
-class scikit_MorphoSnakesParam(core.CWorkflowTaskParam):
+class MorphoSnakesParam(core.CWorkflowTaskParam):
 
     def __init__(self):
         core.CWorkflowTaskParam.__init__(self)
@@ -61,14 +61,14 @@ class scikit_MorphoSnakesParam(core.CWorkflowTaskParam):
 # - Class which implements the process
 # - Inherits core.CProtocolTask or derived from Ikomia API
 # --------------------
-class scikit_MorphoSnakesProcess(dataprocess.C2dImageTask):
+class MorphoSnakes(dataprocess.C2dImageTask):
 
     def __init__(self, name, param):
         dataprocess.C2dImageTask.__init__(self, name)
 
         # Create parameters class
         if param is None:
-            self.setParam(scikit_MorphoSnakesParam())
+            self.setParam(MorphoSnakesParam())
         else:
             self.setParam(copy.deepcopy(param))
         
@@ -157,12 +157,12 @@ class scikit_MorphoSnakesProcess(dataprocess.C2dImageTask):
 # - Factory class to build process object
 # - Inherits dataprocess.CProcessFactory from Ikomia API
 # --------------------
-class scikit_MorphoSnakesProcessFactory(dataprocess.CTaskFactory):
+class MorphoSnakesFactory(dataprocess.CTaskFactory):
 
     def __init__(self):
         dataprocess.CTaskFactory.__init__(self)
         # Set process information as string here
-        self.info.name = "scikit_MorphoSnakes"
+        self.info.name = "skimage_morpho_snakes"
         self.info.shortDescription = "Morphological active contour segmentation from scikit-image library."
         self.info.description = "Morphological active contour segmentation from scikit-image library. " \
                                 "Two algorithms are implemented: Morphological Geodesic Active Contour (MGAC) " \
@@ -186,4 +186,4 @@ class scikit_MorphoSnakesProcessFactory(dataprocess.CTaskFactory):
 
     def create(self, param=None):
         # Create process object
-        return scikit_MorphoSnakesProcess(self.info.name, param)
+        return MorphoSnakes(self.info.name, param)
