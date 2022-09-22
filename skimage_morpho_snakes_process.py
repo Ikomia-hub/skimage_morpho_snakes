@@ -176,7 +176,7 @@ class MorphoSnakesFactory(dataprocess.CTaskFactory):
         self.info.journal = ""
         self.info.year = 2020
         self.info.license = "MIT License"
-        self.info.version = "1.0.0"
+        self.info.version = "1.0.1"
         self.info.repo = "https://github.com/Ikomia-dev/IkomiaPluginsPython"
         self.info.documentationLink = "https://scikit-image.org/docs/stable/api/skimage.segmentation.html#morphological-geodesic-active-contour"
         # If you want to customize plugin icon
