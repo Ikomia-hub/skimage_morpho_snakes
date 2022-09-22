@@ -29,11 +29,11 @@ class MorphoSnakesParam(core.CWorkflowTaskParam):
 
     def setParamMap(self, param_map):
         # Set parameters values from Ikomia application
-        self.method = int(param_map["method"])
-        self.mgac_amplification_contour = int(param_map["mgac_amplification_contour"])
+        self.method = param_map["method"]
+        self.mgac_amplification_contour = param_map["mgac_amplification_contour"]
         self.mgac_iterations = int(param_map["mgac_iterations"])
         self.mgac_smoothing = int(param_map["mgac_smoothing"])
-        self.mgac_threshold = int(param_map["mgac_threshold"])
+        self.mgac_threshold = param_map["mgac_threshold"]
         self.mgac_balloon = int(param_map["mgac_balloon"])
         self.mcv_iterations = int(param_map["mcv_iterations"])
         self.mcv_smoothing = int(param_map["mcv_smoothing"])
