@@ -1,5 +1,4 @@
-from ikomia.core import task, ParamMap
-import os
+from ikomia.core import task
 import cv2
 from ikomia.utils.tests import run_for_test
 import logging
@@ -12,7 +11,7 @@ def test(t, data_dict):
     bin_mask = cv2.cvtColor(img, cv2.COLOR_RGB2GRAY)
     input_img = t.getInput(0)
     input_img.setImage(img)
-    input_mask = t.getInput(1)
+    input_mask = t.getInput(2)
     input_mask.setImage(bin_mask)
 
     for method in ["mgac", "mcv"]:
