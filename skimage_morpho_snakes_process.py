@@ -14,7 +14,6 @@ class MorphoSnakesParam(core.CWorkflowTaskParam):
 
     def __init__(self):
         core.CWorkflowTaskParam.__init__(self)
-        
         # parameters
         self.method = "mgac"
         self.mgac_amplification_contour = "Inverse gaussian gradient"
@@ -27,34 +26,33 @@ class MorphoSnakesParam(core.CWorkflowTaskParam):
         self.mcv_lambda1 = 1
         self.mcv_lambda2 = 1
 
-    def setParamMap(self, param_map):
+    def set_values(self, params):
         # Set parameters values from Ikomia application
-        self.method = param_map["method"]
-        self.mgac_amplification_contour = param_map["mgac_amplification_contour"]
-        self.mgac_iterations = int(param_map["mgac_iterations"])
-        self.mgac_smoothing = int(param_map["mgac_smoothing"])
-        self.mgac_threshold = param_map["mgac_threshold"]
-        self.mgac_balloon = int(param_map["mgac_balloon"])
-        self.mcv_iterations = int(param_map["mcv_iterations"])
-        self.mcv_smoothing = int(param_map["mcv_smoothing"])
-        self.mcv_lambda1 = int(param_map["mcv_lambda1"])
-        self.mcv_lambda2 = int(param_map["mcv_lambda2"])
+        self.method = params["method"]
+        self.mgac_amplification_contour = params["mgac_amplification_contour"]
+        self.mgac_iterations = int(params["mgac_iterations"])
+        self.mgac_smoothing = int(params["mgac_smoothing"])
+        self.mgac_threshold = params["mgac_threshold"]
+        self.mgac_balloon = int(params["mgac_balloon"])
+        self.mcv_iterations = int(params["mcv_iterations"])
+        self.mcv_smoothing = int(params["mcv_smoothing"])
+        self.mcv_lambda1 = int(params["mcv_lambda1"])
+        self.mcv_lambda2 = int(params["mcv_lambda2"])
 
-    def getParamMap(self):
+    def get_values(self):
         # Send parameters values to Ikomia application
         # Create the specific dict structure (string container)
-        param_map = core.ParamMap()
-        param_map["method"] = str(self.method)
-        param_map["mgac_amplification_contour"] = str(self.mgac_amplification_contour)
-        param_map["mgac_iterations"] = str(self.mgac_iterations)
-        param_map["mgac_smoothing"] = str(self.mgac_smoothing)
-        param_map["mgac_threshold"] = str(self.mgac_threshold)
-        param_map["mgac_balloon"] = str(self.mgac_balloon)
-        param_map["mcv_iterations"] = str(self.mcv_iterations)
-        param_map["mcv_smoothing"] = str(self.mcv_smoothing)
-        param_map["mcv_lambda1"] = str(self.mcv_lambda1)
-        param_map["mcv_lambda2"] = str(self.mcv_lambda2)
-        return param_map
+        params = {"method": str(self.method),
+                  "mgac_amplification_contour": str(self.mgac_amplification_contour),
+                  "mgac_iterations": str(self.mgac_iterations),
+                  "mgac_smoothing": str(self.mgac_smoothing),
+                  "mgac_threshold": str(self.mgac_threshold),
+                  "mgac_balloon": str(self.mgac_balloon),
+                  "mcv_iterations": str(self.mcv_iterations),
+                  "mcv_smoothing" : str(self.mcv_smoothing),
+                  "mcv_lambda1": str(self.mcv_lambda1),
+                  "mcv_lambda2": str(self.mcv_lambda2)}
+        return params
 
 
 # --------------------
@@ -68,44 +66,42 @@ class MorphoSnakes(dataprocess.C2dImageTask):
 
         # Create parameters class
         if param is None:
-            self.setParam(MorphoSnakesParam())
+            self.set_param_object(MorphoSnakesParam())
         else:
-            self.setParam(copy.deepcopy(param))
-        
+            self.set_param_object(copy.deepcopy(param))
+
         # add input -> initial level set
-        self.addInput(dataprocess.CImageIO())
+        self.add_input(dataprocess.CImageIO())
 
         # add output -> results image
-        self.addOutput(dataprocess.CImageIO())
+        self.add_output(dataprocess.CImageIO())
 
-        # set color mask
-        self.setOutputColorMap(1, 0, [[255, 0, 0]])
 
-    def getProgressSteps(self):
+    def get_progress_steps(self):
         # Function returning the number of progress steps for this process
         # This is handled by the main progress bar of Ikomia application
-        param = self.getParam()
+        param = self.get_param_object()
         if param.method == "mgac":
             nb_iter = param.mgac_iterations
         else :
             nb_iter = param.mcv_iterations
-        
+
         return nb_iter
 
     def run(self):
-        self.beginTaskRun()
+        self.begin_task_run()
 
         # Get input 0 :
-        input = self.getInput(0)
+        input = self.get_input(0)
 
         # Get output :
-        output = self.getOutput(0)
+        output = self.get_output(0)
 
         # Get parameters :
-        param = self.getParam()
+        param = self.get_param_object()
 
         # Get image from input/output (numpy array):
-        srcImage = input.getImage()
+        srcImage = input.get_image()
 
         # Convert to grey Image if RGB
         if len(srcImage.shape) == 3:
@@ -123,34 +119,65 @@ class MorphoSnakes(dataprocess.C2dImageTask):
            gimage = imagef
 
         # initial level set
-        initlevelSetInput = self.getInput(2)
-        if initlevelSetInput.isDataAvailable():
-            initlevelSetBinary = initlevelSetInput.getImage()
+        initlevelSetInput = self.get_input(2)
+        if initlevelSetInput.is_data_available():
+            initlevelSetBinary = initlevelSetInput.get_image()
             if param.method == "mgac":
-                proc_img = morphological_geodesic_active_contour(gimage, param.mgac_iterations, init_level_set=initlevelSetBinary, smoothing=param.mgac_smoothing, threshold=param.mgac_threshold,balloon=param.mgac_balloon, iter_callback=(lambda callback: self.emitStepProgress())).astype(np.uint8) * 255
+                proc_img = morphological_geodesic_active_contour(
+                                                        gimage, param.mgac_iterations,
+                                                        init_level_set=initlevelSetBinary,
+                                                        smoothing=param.mgac_smoothing,
+                                                        threshold=param.mgac_threshold,
+                                                        balloon=param.mgac_balloon, 
+                                                        iter_callback=(lambda callback: self.emit_step_progress())
+                                                                ).astype(np.uint8) * 255
             else:
-                proc_img = morphological_chan_vese(gimage, param.mcv_iterations, init_level_set=initlevelSetBinary, smoothing=param.mcv_smoothing, lambda1=param.mcv_lambda1, lambda2=param.mcv_lambda2, iter_callback=(lambda callback: self.emitStepProgress())).astype(np.uint8) * 255
+                proc_img = morphological_chan_vese(
+                                    gimage,
+                                    param.mcv_iterations,
+                                    init_level_set=initlevelSetBinary,
+                                    smoothing=param.mcv_smoothing,
+                                    lambda1=param.mcv_lambda1,
+                                    lambda2=param.mcv_lambda2,
+                                    iter_callback=(lambda callback: self.emit_step_progress())
+                                                    ).astype(np.uint8) * 255
         else :
             # input graph -> by user / by previous aoperation in worflow  
-            graphInput = self.getInput(1)
-            if graphInput.isDataAvailable():
-                self.createGraphicsMask(imagef.shape[1], imagef.shape[0], graphInput)
-                binImg = self.getGraphicsMask(0)
+            graphInput = self.get_input(1)
+            if graphInput.is_data_available():
+                self.create_graphics_mask(imagef.shape[1], imagef.shape[0], graphInput)
+                binImg = self.get_graphics_mask(0)
                 if param.method == "mgac":
-                    proc_img = morphological_geodesic_active_contour(gimage, param.mgac_iterations, init_level_set=binImg, smoothing=param.mgac_smoothing, threshold=param.mgac_threshold,balloon=param.mgac_balloon, iter_callback=(lambda callback: self.emitStepProgress())).astype(np.uint8) * 255
+                    proc_img = morphological_geodesic_active_contour(
+                                            gimage,
+                                            param.mgac_iterations,
+                                            init_level_set=binImg,
+                                            smoothing=param.mgac_smoothing,
+                                            threshold=param.mgac_threshold,
+                                            balloon=param.mgac_balloon,
+                                            iter_callback=(lambda callback: self.emit_step_progress())
+                                                                    ).astype(np.uint8) * 255
                 else:
-                    proc_img = morphological_chan_vese(gimage, param.mcv_iterations, init_level_set=binImg, smoothing=param.mcv_smoothing, lambda1=param.mcv_lambda1, lambda2=param.mcv_lambda2, iter_callback=(lambda callback: self.emitStepProgress())).astype(np.uint8) * 255
+                    proc_img = morphological_chan_vese(
+                                        gimage,
+                                        param.mcv_iterations,
+                                        init_level_set=binImg,
+                                        smoothing=param.mcv_smoothing,
+                                        lambda1=param.mcv_lambda1,
+                                        lambda2=param.mcv_lambda2,
+                                        iter_callback=(lambda callback: self.emit_step_progress())
+                                                    ).astype(np.uint8) * 255
             else:
                 raise Exception("No initial level-set given: it must be graphics input or binary image.")
 
         # set output mask binary image
-        output.setImage(proc_img)
+        output.set_image(proc_img)
 
         # add foward input image
-        self.forwardInputImage(0, 1)
+        self.forward_input_image(0, 1)
 
-        # Call endTaskRun to finalize process
-        self.endTaskRun()
+        # Call end_task_run to finalize process
+        self.end_task_run()
 
 
 # --------------------
@@ -163,7 +190,7 @@ class MorphoSnakesFactory(dataprocess.CTaskFactory):
         dataprocess.CTaskFactory.__init__(self)
         # Set process information as string here
         self.info.name = "skimage_morpho_snakes"
-        self.info.shortDescription = "Morphological active contour segmentation from scikit-image library."
+        self.info.short_description = "Morphological active contour segmentation from scikit-image library."
         self.info.description = "Morphological active contour segmentation from scikit-image library. " \
                                 "Two algorithms are implemented: Morphological Geodesic Active Contour (MGAC) " \
                                 "and Morphological Chan Vese (MCV). Users must give initial level-set as input, " \
@@ -176,11 +203,11 @@ class MorphoSnakesFactory(dataprocess.CTaskFactory):
         self.info.journal = ""
         self.info.year = 2020
         self.info.license = "MIT License"
-        self.info.version = "1.0.1"
+        self.info.version = "1.1.0"
         self.info.repo = "https://github.com/Ikomia-dev/IkomiaPluginsPython"
-        self.info.documentationLink = "https://scikit-image.org/docs/stable/api/skimage.segmentation.html#morphological-geodesic-active-contour"
+        self.info.documentation_link = "https://scikit-image.org/docs/stable/api/skimage.segmentation.html#morphological-geodesic-active-contour"
         # If you want to customize plugin icon
-        self.info.iconPath = "icons/scikit.png"
+        self.info.icon_path = "icons/scikit.png"
         # Associated keywords, for search
         self.info.keywords = "sci-kit,image,morphological,geodesic,active,contour,segmentation,chan vese"
 

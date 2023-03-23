@@ -46,7 +46,7 @@ class MorphoSnakesWidget(core.CWorkflowTaskWidget):
         layout_ptr = qtconversion.PyQtToQt(self.gridLayout)
 
         # Set widget layout
-        self.setLayout(layout_ptr)
+        self.set_layout(layout_ptr)
 
         # update left parameter panel
         if self.parameters.method != "mgac":
@@ -57,7 +57,7 @@ class MorphoSnakesWidget(core.CWorkflowTaskWidget):
         self.comboMethod = QComboBox()
         self.comboMethod.addItem("Morphological Geodesic Active Contour")
         self.comboMethod.addItem("Morphological Chan Vese")
-        self.comboMethod.currentIndexChanged.connect(self.OnMethodChange)
+        self.comboMethod.currentIndexChanged.connect(self.on_method_change)
 
         self.gridLayout.setRowStretch(0,0)
         self.gridLayout.addWidget(label_method, 0, 0)
@@ -70,7 +70,7 @@ class MorphoSnakesWidget(core.CWorkflowTaskWidget):
         self.mgac_coutour_check = QCheckBox("Default borders amplification");
         self.mgac_coutour_check.setChecked(True);
 
-        self.mgac_coutour_check.stateChanged.connect(self.OnContourDefaultChange)
+        self.mgac_coutour_check.stateChanged.connect(self.on_contour_default_change)
         self.mgac_stack_comboContour = QComboBox()
         self.mgac_stack_comboContour.addItem("Inverse gaussian gradient")
         
@@ -97,7 +97,7 @@ class MorphoSnakesWidget(core.CWorkflowTaskWidget):
 
         self.mgac_threshold_check = QCheckBox("Default threshold");
         self.mgac_threshold_check.setChecked(True)
-        self.mgac_threshold_check.stateChanged.connect(self.OnThresholdDefaultChange)
+        self.mgac_threshold_check.stateChanged.connect(self.on_threshold_default_change)
         self.mgac_spin_threshold = QDoubleSpinBox()
         self.mgac_spin_threshold.setMaximum(self.MAX_SPINBOX)
         self.mgac_spin_threshold.setSingleStep(0.1)
@@ -136,8 +136,8 @@ class MorphoSnakesWidget(core.CWorkflowTaskWidget):
         self.gridLayoutMgac.addWidget(label_balloon,5, 0)
         self.gridLayoutMgac.addWidget(self.mgac_spin_balloon, 5, 1)
         self.gridLayoutMgac.setRowStretch(6,6)
-
         self.mgac.setLayout(self.gridLayoutMgac)
+
 
     def chanVeseWidget(self):
         self.gridLayoutMcv = QGridLayout()
@@ -185,32 +185,32 @@ class MorphoSnakesWidget(core.CWorkflowTaskWidget):
         self.gridLayoutMcv.setRowStretch(3,3)
         self.gridLayoutMcv.addWidget(label_lambda2, 3, 0)
         self.gridLayoutMcv.addWidget(self.mcv_spin_lambda2, 3, 1)
-        self.gridLayoutMcv.setRowStretch(4,4)
-
+        self.gridLayoutMcv.setRowStretch(4,4)    
         self.chanVese.setLayout(self.gridLayoutMcv)
 
     # pySlot
-    def OnContourDefaultChange(self):
+    def on_contour_default_change(self):
         if not self.mgac_coutour_check.isChecked():
             self.mgac_stack_comboContour.hide()
         else :
             self.mgac_stack_comboContour.show()
 
     # pySlot
-    def OnThresholdDefaultChange(self):
+    def on_threshold_default_change(self):
         if self.mgac_threshold_check.isChecked():
             self.mgac_spin_threshold.hide()
         else :
             self.mgac_spin_threshold.show()
 
     # pySlot
-    def OnMethodChange(self):
+    def on_method_change(self):
         if self.comboMethod.currentText() == "Morphological Geodesic Active Contour":
             self.stack.setCurrentIndex(0)
         else :
             self.stack.setCurrentIndex(1)
 
-    def onApply(self):
+
+    def on_apply(self):
         # Apply button clicked slot
         if self.comboMethod.currentText() == "Morphological Geodesic Active Contour":
             self.parameters.method = "mgac"
@@ -237,7 +237,7 @@ class MorphoSnakesWidget(core.CWorkflowTaskWidget):
             self.parameters.mcv_lambda2 = self.mcv_spin_lambda2.value()
 
         # Send signal to launch the process
-        self.emitApply(self.parameters)
+        self.emit_apply(self.parameters)
 
 
 # --------------------

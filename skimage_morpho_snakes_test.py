@@ -9,10 +9,10 @@ def test(t, data_dict):
     logger.info("===== Test::infer skimage morpho snakes =====")
     img = cv2.imread(data_dict["images"]["detection"]["coco"])[::-1]
     bin_mask = cv2.cvtColor(img, cv2.COLOR_RGB2GRAY)
-    input_img = t.getInput(0)
-    input_img.setImage(img)
-    input_mask = t.getInput(2)
-    input_mask.setImage(bin_mask)
+    input_img = t.get_input(0)
+    input_img.set_image(img)
+    input_mask = t.get_input(2)
+    input_mask.set_image(bin_mask)
 
     for method in ["mgac", "mcv"]:
         params = task.get_parameters(t)
