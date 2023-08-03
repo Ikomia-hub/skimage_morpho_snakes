@@ -1,4 +1,3 @@
-from ikomia.core import task
 import cv2
 from ikomia.utils.tests import run_for_test
 import logging
@@ -15,9 +14,9 @@ def test(t, data_dict):
     input_mask.set_image(bin_mask)
 
     for method in ["mgac", "mcv"]:
-        params = task.get_parameters(t)
+        params = t.get_param_object()
         params["method"] = method
         # without update = 1, model is not updated between 2 test
-        task.set_parameters(t, params)
+        t.set_parameters(params)
         yield run_for_test(t)
 
