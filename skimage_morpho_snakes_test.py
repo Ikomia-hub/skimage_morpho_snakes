@@ -14,7 +14,7 @@ def test(t, data_dict):
     input_mask.set_image(bin_mask)
 
     for method in ["mgac", "mcv"]:
-        params = t.get_param_object()
+        params = t.get_parameters()
         params["method"] = method
         # without update = 1, model is not updated between 2 test
         t.set_parameters(params)
