@@ -33,11 +33,11 @@ class MorphoSnakesParam(core.CWorkflowTaskParam):
         self.mgac_iterations = int(params["mgac_iterations"])
         self.mgac_smoothing = int(params["mgac_smoothing"])
         self.mgac_threshold = params["mgac_threshold"]
-        self.mgac_balloon = int(params["mgac_balloon"])
+        self.mgac_balloon = float(params["mgac_balloon"])
         self.mcv_iterations = int(params["mcv_iterations"])
         self.mcv_smoothing = int(params["mcv_smoothing"])
-        self.mcv_lambda1 = int(params["mcv_lambda1"])
-        self.mcv_lambda2 = int(params["mcv_lambda2"])
+        self.mcv_lambda1 = float(params["mcv_lambda1"])
+        self.mcv_lambda2 = float(params["mcv_lambda2"])
 
     def get_values(self):
         # Send parameters values to Ikomia application
@@ -203,7 +203,7 @@ class MorphoSnakesFactory(dataprocess.CTaskFactory):
         self.info.journal = ""
         self.info.year = 2020
         self.info.license = "MIT License"
-        self.info.version = "1.1.0"
+        self.info.version = "1.1.1"
         self.info.repo = "https://github.com/Ikomia-dev/IkomiaPluginsPython"
         self.info.documentation_link = "https://scikit-image.org/docs/stable/api/skimage.segmentation.html#morphological-geodesic-active-contour"
         # If you want to customize plugin icon
