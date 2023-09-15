@@ -21,7 +21,7 @@
 
 Morphological active contour segmentation from scikit-image library. Two methods are implemented: Morphological Geodesic Active Contour (MGAC) and Morphological Chan Vese (MCV). Users must give initial level-set as input, it can be graphics input drawn interactively (Ikomia Studio only) or binary image. Algorithm creates segmented region in a binary image.
 
-![Example image](https://raw.githubusercontent.com/Ikomia-hub/infer_mmlab_text_recognition/feat/new_readme/images/coins-result.jpg)
+![Example image](https://raw.githubusercontent.com/Ikomia-hub/skimage_morpho_snakes/feat/new_readme/images/coins-result.jpg)
 
 ## :rocket: Use with Ikomia API
 
