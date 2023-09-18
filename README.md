@@ -78,7 +78,6 @@ Ikomia Studio offers a friendly UI with the same features as the API.
 
 ```python
 from ikomia.dataprocess.workflow import Workflow
-from ikomia.utils.displayIO import display
 
 # Init your workflow
 wf = Workflow()
@@ -129,7 +128,6 @@ Every algorithm produces specific outputs, yet they can be explored them the sam
 
 ```python
 from ikomia.dataprocess.workflow import Workflow
-from ikomia.utils.displayIO import display
 
 # Init your workflow
 wf = Workflow()
@@ -153,7 +151,7 @@ snake.set_parameters({
 wf.run()
 
 # Iterate over outputs
-for output in algo.get_outputs()
+for output in snake.get_outputs():
     # Print information
     print(output)
     # Export it to JSON
