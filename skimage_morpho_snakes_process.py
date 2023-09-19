@@ -191,11 +191,6 @@ class MorphoSnakesFactory(dataprocess.CTaskFactory):
         # Set process information as string here
         self.info.name = "skimage_morpho_snakes"
         self.info.short_description = "Morphological active contour segmentation from scikit-image library."
-        self.info.description = "Morphological active contour segmentation from scikit-image library. " \
-                                "Two algorithms are implemented: Morphological Geodesic Active Contour (MGAC) " \
-                                "and Morphological Chan Vese (MCV). Users must give initial level-set as input, " \
-                                "it can be graphics input drawn interactively or binary image. Process outputs " \
-                                "segmented region in a binary image and overlays the mask on top of the original image."
         self.info.authors = "Ikomia team"
         # relative path -> as displayed in Ikomia application process tree
         self.info.path = "Plugins/Python/Segmentation/Active contour"
