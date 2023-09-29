@@ -206,6 +206,8 @@ class MorphoSnakesFactory(dataprocess.CTaskFactory):
         self.info.icon_path = "icons/scikit.png"
         # Associated keywords, for search
         self.info.keywords = "sci-kit,image,morphological,geodesic,active,contour,segmentation,chan vese"
+        self.info.algo_type = core.AlgoType.OTHER
+        self.info.algo_tasks = "NONE"
 
     def create(self, param=None):
         # Create process object
